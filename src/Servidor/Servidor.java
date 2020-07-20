@@ -6,12 +6,8 @@
 package Servidor;
 
 import Conexion.Conexion;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+
 
 /**
  *
@@ -24,20 +20,36 @@ public class Servidor extends Conexion {
         pathFile = path;
     }
     
-    public void startServer(){
+//    public void startServer(){
+//        try{
+//            
+//            System.out.println("Esperando...");
+//            cs = ss.accept();
+//            InputStream llegada = cs.getInputStream();
+//            FileOutputStream destino=new FileOutputStream(pathFile);
+//            byte[] buffer = new byte[1024];
+//            int len;
+//            while((len=llegada.read(buffer))>0){
+//                System.out.println(len);
+//                destino.write(buffer,0,len);
+//            }
+//            System.out.println("Fin de la conexion");
+//        }catch(Exception e){
+//            System.out.println(e.getMessage());
+//        }
+//    }
+    
+    public void startServer(){        
         try{
-            
+            int id = 1;
             System.out.println("Esperando...");
-            cs = ss.accept();
-            InputStream llegada = cs.getInputStream();
-            FileOutputStream destino=new FileOutputStream(pathFile);
-            byte[] buffer = new byte[1024];
-            int len;
-            while((len=llegada.read(buffer))>0){
-                System.out.println(len);
-                destino.write(buffer,0,len);
+            while (true) {
+                cs = ss.accept();
+		System.out.println("Cliente con ID: " + id + " conectado de " + cs.getInetAddress().getHostName() + "...");
+		Thread server = new HiloServidor(cs, id, pathFile);
+		id++;
+		server.start();
             }
-            System.out.println("Fin de la conexion");
         }catch(Exception e){
             System.out.println(e.getMessage());
         }
